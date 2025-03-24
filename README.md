@@ -74,10 +74,6 @@ IP: 10.0.2.1 (router)
 - Running this script requires **root privileges** on some systems.
 - Use responsibly and ensure you have permission before scanning any network.
 
-## Future Development
-- Would like to expand the filtering to grab more important info or any partial info grabbed by the Nmap scan
-- Would like to implment changes to make it run faster
-
 ## License
 This project is licensed under the MIT License.
 
