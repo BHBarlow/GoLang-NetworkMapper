@@ -6,29 +6,40 @@ This Go program automates network scanning using Nmap. It performs the following
 1. **Ping Scan (`nmap -sP`)**: Identifies active hosts in the specified subnet.
 2. **Full Nmap Scan (`nmap -A`)**: Runs a comprehensive scan on each active host, gathering information such as open ports, running services, and OS details.
 3. **Concurrent Scanning**: Uses Goroutines and WaitGroups to scan multiple hosts in parallel for improved efficiency.
+4. **Configuration File Support**: Uses a `config.json` file to store the target subnet and Nmap flags, reducing the need to modify the source code.
 
-## Installation Requirements
+## Quick Start (Pre-Configured Binary)
+If you have the pre-built binary available, simply run:
+```sh
+./pong  # Linux/macOS
+```
+This will automatically use the settings from `config.json` for scanning.
+
+## Installation Requirements for modifications 
 
 ### Prerequisites
 - Ensure you have **Go** installed on your system. If not, install it:
   ```sh
   sudo apt update && sudo apt install golang -y  # Debian/Ubuntu
   brew install go  # macOS
-  winget install -e --id golang.Go  # Windows (with Winget)
   ```
 - Install **Nmap** (Required for scanning):
   ```sh
   sudo apt install nmap -y  # Debian/Ubuntu
   brew install nmap  # macOS
-  winget install -e --id Nmap.Nmap  # Windows (with Winget)
   ```
 
 ## Configuration
-- Before running the program, **modify the `target` variable** in `main()` to match your desired IP range:
-  ```go
-  target := "10.0.2.0/24"  // Change this to match your network
-  ```
-  This IP range must be hardcoded before running the program.
+The program uses a `config.json` file to store scan settings. Create or modify `config.json` in the same directory as the executable:
+```json
+{
+  "target": "192.168.1.0/24",
+  "nmap_flags": ["-A", "-T5", "--min-rate", "1000", "--max-retries", "1"]
+}
+```
+### Configuration Options
+- `target`: The IP address or subnet to scan.
+- `nmap_flags`: An array of Nmap command-line options to customize scanning.
 
 ## Building and Running
 
@@ -39,13 +50,19 @@ This Go program automates network scanning using Nmap. It performs the following
    ```
 2. **Build the Go program:**
    ```sh
-   go build -o nmap_scanner
+   go build -o pong
    ```
 3. **Run the compiled executable:**
    ```sh
-   ./nmap_scanner
+   ./pong  # Linux/macOS
    ```
-   (On Windows, run `nmap_scanner.exe` instead.)
+
+### Overriding Configuration via CLI
+You can override the `target` from `config.json` using the command-line flag:
+```sh
+go run pong.go -target 192.168.1.10
+```
+If no CLI argument is provided, the program defaults to the `config.json` settings.
 
 ## Expected Output
 - The program will first list active hosts in the subnet.
@@ -71,7 +88,7 @@ IP: 10.0.2.1 (router)
 ```
 
 ## Notes
-- Running this script requires **root privileges** on some systems.
+- Running this script may require **root privileges** on some systems.
 - Use responsibly and ensure you have permission before scanning any network.
 
 ## License
